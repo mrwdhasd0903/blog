@@ -48,7 +48,7 @@ export default {
   align-items: center;
 }
 .clearfix {
-  min-height: 500px;
+  min-height: 400px;
 }
 .bottom {
   text-align: center;

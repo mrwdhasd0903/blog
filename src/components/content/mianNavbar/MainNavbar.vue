@@ -1,25 +1,38 @@
 <template>
   <!-- 导航栏包装 -->
-  <div class>
+  <div class="main-navbar">
     <navbar>
       <div slot="heade-img">
         <img id="heade-img" :src="headImg" alt />
       </div>
       <div slot="heade-name">
-        <img id="heade-name" :src="headName" alt />
+        <router-link to="/articleList">
+          <img id="heade-name" :src="headName" alt />
+        </router-link>
       </div>
       <div id="indexPage" slot="nav-control">
-        <nav-control-item>
-          <span slot="text">首页</span>
-        </nav-control-item>
+        <!-- url:跳转的路由 -->
+        <el-tooltip effect="dark" content="返回首页" placement="bottom-start">
+          <nav-control-item url="/articleList">
+            <span slot="text" class="el-icon-arrow-left"></span>
+          </nav-control-item>
+        </el-tooltip>
+        <el-tooltip effect="dark" content="转换BootStrap风格(可能加载缓慢)" placement="bottom-start">
+          <div @click="toRescue">
+            <nav-control-item url>
+              <span slot="text" class="el-icon-magic-stick"></span>
+            </nav-control-item>
+          </div>
+        </el-tooltip>
       </div>
       <div slot="nav-search">
         <el-input
           @focus="cardDown"
-          size="small"
+          size="mini"
           placeholder="搜索..."
           v-model="searchVal"
           class="input-with-select"
+          clearable
         >
           <el-button @click="search" slot="append" icon="el-icon-search"></el-button>
         </el-input>
@@ -52,7 +65,8 @@ import LabItem from "components/common/labbar/LabItem";
 //网络组件
 import { getTheme, getAllLabel } from "network/navbar";
 //工具js
-import { addIp } from "common/addIp";
+import { addIp, getURL } from "common/addIp";
+import { isObjectValueEqual } from "common/utils";
 export default {
   name: "MainNavbar",
   components: {
@@ -63,7 +77,7 @@ export default {
   },
   data() {
     return {
-      labbarTop: "-100%",
+      labbarTop: "-900px",
       searchVal: "",
       headImg: null,
       headName: null,
@@ -98,7 +112,7 @@ export default {
     },
     //筛选标签面板收起
     cardUp() {
-      this.labbarTop = "-100%";
+      this.labbarTop = "-900px";
     },
     //筛选标签面板下降
     cardDown() {
@@ -132,7 +146,10 @@ export default {
     },
     //搜索提交函数
     search() {
-      if (this.searchVal != "") {
+      if (
+        this.searchVal != "" ||
+        isObjectValueEqual(this.labArr, this.backupLabArr)
+      ) {
         this.searchObj["searchVal"] = this.searchVal;
         for (const item of this.labArr) {
           this.labelArr["label" + item.i] = item.c != "rgb(119, 119, 119)";
@@ -145,12 +162,37 @@ export default {
           type: "warning"
         });
       }
+    },
+    //跳转外部链接
+    toRescue() {
+      // console.log(getURL());
+      window.location.href = getURL();
     }
   }
 };
 </script>
 
+<style>
+.main-navbar input.el-input__inner {
+  border-radius: 14px 0 0 14px;
+}
+.main-navbar div.el-input-group__append {
+  border-radius: 0 14px 14px 0;
+  border: none;
+  background-color: rgb(0, 116, 229);
+}
+.main-navbar button.el-button--default {
+  color: #fff;
+}
+</style>
 <style scoped>
+.main-navbar {
+  position: fixed;
+  top: 0;
+  background: #fff;
+  width: 100%;
+  z-index: 999;
+}
 #heade-img {
   height: 44px;
   border-radius: 50%;

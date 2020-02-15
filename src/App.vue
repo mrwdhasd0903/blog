@@ -1,6 +1,10 @@
 <template>
   <div id="app">
     <main-navbar></main-navbar>
+
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 

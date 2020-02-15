@@ -1,15 +1,28 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+const ArticleList = () => import("views/articleList/ArticleList")
+const ArticleContent = () => import("views/articleContent/ArticleContent")
+
 
 // 1 安装插件
 Vue.use(VueRouter)
-// 2 创建router
+
+// 2配置路径和组件的映射信息
 const routes = [{
     path: '/',
-    redirect: '/home'
+    redirect: '/articleList'
+  }, {
+    path: '/articleList',
+    component: ArticleList,
+  }, {
+
+    path: '/articleList/:aid',
+    component: ArticleContent,
   }
+
 ]
+// 2 创建router
 const router = new VueRouter({
   routes,
   mode: 'history'

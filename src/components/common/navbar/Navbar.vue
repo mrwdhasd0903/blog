@@ -37,7 +37,7 @@ export default {
   display: -webkit-flex;
   line-height: 44px;
   height: 44px;
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 1px 3px rgba(26, 26, 26, 0.1);
   display: flex;
   justify-content: space-between;
 }
@@ -50,7 +50,7 @@ export default {
 }
 #nav-control > div {
   display: flex;
-  justify-content: space-between;
+  justify-content:flex-start;
 }
 .heade-name {
   align-self: flex-start;
@@ -64,6 +64,11 @@ export default {
 @media screen and (max-width: 767px) {
   .heade-img {
     margin-left: 0px;
+    display: none;
+  }
+  .heade-name {
+    margin-left: 5px;
+    margin-right: 5px;
   }
   #nav-control {
     display: none;

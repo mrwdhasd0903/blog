@@ -1,4 +1,4 @@
-// home 的网络请求
+// 主题和所有标签 的网络请求
 import {
   request
 } from './request'
