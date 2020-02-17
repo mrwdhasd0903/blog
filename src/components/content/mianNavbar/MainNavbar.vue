@@ -17,8 +17,8 @@
             <span slot="text" class="el-icon-arrow-left"></span>
           </nav-control-item>
         </el-tooltip>
-        <el-tooltip effect="dark" content="转换BootStrap风格(可能加载缓慢)" placement="bottom-start">
-          <div @click="toRescue">
+        <el-tooltip effect="dark" content="回到经典白主题" placement="bottom-start">
+          <div @click="whiteColor">
             <nav-control-item url>
               <span slot="text" class="el-icon-magic-stick"></span>
             </nav-control-item>
@@ -72,7 +72,7 @@ import LabItem from "components/common/labbar/LabItem";
 //网络组件
 import { getTheme, getAllLabel } from "network/navbar";
 //工具js
-import { addIp, getURL } from "common/addIp";
+import { addIp } from "common/addIp";
 import { isObjectValueEqual } from "common/utils";
 import { getColor } from "common/getColor";
 
@@ -110,7 +110,12 @@ export default {
     // 改变颜色
     changeColor() {
       this.mainNavbarColor = getColor(50);
-      console.log((document.body.style.background = getColor(50)));
+      document.body.style.background = getColor(50);
+    },
+    //返回经典白
+    whiteColor() {
+      this.mainNavbarColor = "#fff";
+      document.body.style.background = "rgb(246, 246, 246)";
     },
     //请求主题数据函数
     getTheme() {
@@ -188,11 +193,6 @@ export default {
           type: "warning"
         });
       }
-    },
-    //跳转外部链接
-    toRescue() {
-      // console.log(getURL());
-      window.location.href = getURL();
     }
   }
 };
