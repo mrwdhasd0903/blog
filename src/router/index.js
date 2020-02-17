@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 const ArticleList = () => import("views/articleList/ArticleList")
 const ArticleContent = () => import("views/articleContent/ArticleContent")
+const ArticleSearch = () => import("views/articleSearch/ArticleSearch")
 
 
 // 1 安装插件
@@ -19,7 +20,12 @@ const routes = [{
 
     path: '/articleList/:aid',
     component: ArticleContent,
+  }, {
+
+    path: '/articleSearch',
+    component: ArticleSearch,
   }
+
 
 ]
 // 2 创建router

@@ -41,9 +41,11 @@
       <div class="right">
         <!-- 留言 -->
         <div class="leabar" ref="leabar" :class="{leabartransition:switchData}">
-          <el-input size="mini" placeholder="欢迎留言" v-model="leaveObj.leaveContent">
-            <el-button @click="leaved" slot="append">留言</el-button>
-          </el-input>
+          <div class="leabar-input">
+            <el-input size="mini" maxlength="100" show-word-limit placeholder="欢迎留言" v-model="leaveObj.leaveContent">
+              <el-button @click="leaved" slot="append">留言</el-button>
+            </el-input>
+          </div>
           <leabar>
             <div class="leabar-content" slot="leabar">
               <leabar-item v-for="(item,index) in leaveList" :key="index" :leaveItem="item"></leabar-item>
@@ -55,7 +57,9 @@
           <main-swiper></main-swiper>
         </div>
         <!-- 页脚 -->
-        <div class="footer"><foobar></foobar></div>
+        <div class="footer">
+          <foobar></foobar>
+        </div>
       </div>
     </div>
   </div>
@@ -81,6 +85,7 @@ export default {
   components: { MainSwiper, Conbar, ConbarItem, Leabar, LeabarItem, Foobar },
   data() {
     return {
+      scrollTo: 0,
       switchData: false,
       articleList: [],
       pageMessage: {
@@ -102,6 +107,12 @@ export default {
     this.getArticleList();
     //获取留言数据
     this.leaveShow();
+  },
+  activated() {
+    window.scrollTo(0, this.scrollTo);
+  },
+  deactivated() {
+    this.scrollTo = document.documentElement.scrollTop;
   },
   methods: {
     // 手机端留言板滑动类加载函数
@@ -193,9 +204,11 @@ export default {
 }
 </style>
 <style scoped>
+.leabar-input {
+  padding: 10px;
+}
 .leabar-content {
   height: 550px;
-  margin: 10px 0;
   overflow: auto;
 }
 .pageQuery {
@@ -271,6 +284,7 @@ export default {
     top: 54px;
     right: -800px;
     transition: all 0.5s ease;
+    z-index: 99;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   }
   .switchtransition {

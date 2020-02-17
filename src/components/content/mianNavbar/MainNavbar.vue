@@ -1,6 +1,6 @@
 <template>
   <!-- 导航栏包装 -->
-  <div class="main-navbar">
+  <div class="main-navbar" :style="{background:mainNavbarColor}">
     <navbar>
       <div slot="heade-img">
         <img id="heade-img" :src="headImg" alt />
@@ -21,6 +21,13 @@
           <div @click="toRescue">
             <nav-control-item url>
               <span slot="text" class="el-icon-magic-stick"></span>
+            </nav-control-item>
+          </div>
+        </el-tooltip>
+        <el-tooltip effect="dark" content="换个主题吧" placement="bottom-start">
+          <div @click="changeColor">
+            <nav-control-item url>
+              <span slot="text" class="el-icon-brush"></span>
             </nav-control-item>
           </div>
         </el-tooltip>
@@ -67,6 +74,8 @@ import { getTheme, getAllLabel } from "network/navbar";
 //工具js
 import { addIp, getURL } from "common/addIp";
 import { isObjectValueEqual } from "common/utils";
+import { getColor } from "common/getColor";
+
 export default {
   name: "MainNavbar",
   components: {
@@ -85,9 +94,12 @@ export default {
       backupLabArr: [],
       //这个用于返回给服务器
       labelArr: {},
-      searchObj: {}
+      searchObj: {},
+      mainNavbarColor: "#fff"
     };
   },
+  // 接收注入的数据
+  inject: ["reload"],
   computed: {},
   created() {
     //请求数据
@@ -95,12 +107,17 @@ export default {
     this.getAllLabel();
   },
   methods: {
+    // 改变颜色
+    changeColor() {
+      this.mainNavbarColor = getColor(50);
+      console.log((document.body.style.background = getColor(50)));
+    },
     //请求主题数据函数
     getTheme() {
       getTheme().then(res => {
         this.headImg = res.headImg.substring(4, res.headName.length);
         this.headName = res.headName.substring(9, res.headName.length - 1);
-        addIp();
+        addIp("main-navbar");
       });
     },
     //请求标签数据函数
@@ -155,7 +172,16 @@ export default {
           this.labelArr["label" + item.i] = item.c != "rgb(119, 119, 119)";
         }
         this.searchObj["searchLab"] = JSON.stringify(this.labelArr);
-        console.log(this.searchObj);
+        this.$router["searchObj"] = this.searchObj;
+        if (this.$route.path == "/articleSearch") {
+          // 刷新路由
+          this.reload();
+        } else {
+          this.$router.push("/articleSearch");
+        }
+        this.cardUp();
+
+        // console.log(this.$router);
       } else {
         this.$message({
           message: "你还没输入内容呢",
@@ -189,7 +215,7 @@ export default {
 .main-navbar {
   position: fixed;
   top: 0;
-  background: #fff;
+  /* background: #fff; */
   width: 100%;
   z-index: 999;
 }

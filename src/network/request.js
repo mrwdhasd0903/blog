@@ -4,7 +4,7 @@ axios.defaults.withCredentials = true
 export function request(config) {
   // 1 创建axios实例
   const instance = axios.create({
-    baseURL: "http://47.113.92.137",
+    baseURL: "http://47.113.92.137:8888",
     timeout: 20000,
     //解决跨域session问题
     headers: {

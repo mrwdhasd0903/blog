@@ -10,12 +10,19 @@
     <div class="info">
       <!-- 左边 -->
       <div class="left">
+        <!-- 文章列表 -->
         <conbar>
           <div slot="conbar">
-            <conbar-item v-if="articleItem.id" :articleItem="articleItem"></conbar-item>
-            <div v-highlight class="articleContent" v-html="articleContent">{{articleContent}}</div>
+            <router-link
+              v-for="(item,index) in articleList"
+              :key="index"
+              :to="'/articleList/'+item.id"
+            >
+              <conbar-item :articleItem="item"></conbar-item>
+            </router-link>
           </div>
         </conbar>
+        <!-- 分页组件 -->
       </div>
       <!-- 右边 -->
       <div class="right">
@@ -26,20 +33,18 @@
               size="mini"
               maxlength="100"
               show-word-limit
-              placeholder="欢迎评论"
-              v-model="replyObj.replyContent"
+              placeholder="欢迎留言"
+              v-model="leaveObj.leaveContent"
             >
-              <el-button @click="replyed" slot="append">评论</el-button>
+              <el-button @click="leaved" slot="append">留言</el-button>
             </el-input>
           </div>
           <leabar>
             <div class="leabar-content" slot="leabar">
-              <repbar-item v-for="(item,index) in replyList" :key="index" :replyItem="item"></repbar-item>
-              <p class="ifNull" v-if="replyList.length==0">还是空的,留下第一条评论~</p>
+              <leabar-item v-for="(item,index) in leaveList" :key="index" :leaveItem="item"></leabar-item>
             </div>
           </leabar>
         </div>
-
         <!-- 广告 -->
         <div class="advertising">
           <main-swiper></main-swiper>
@@ -59,103 +64,100 @@ import Conbar from "components/common/conbar/Conbar";
 import ConbarItem from "components/common/conbar/ConbarItem";
 
 import Leabar from "components/common/leabar/Leabar";
-import RepbarItem from "components/common/leabar/RepbarItem";
+import LeabarItem from "components/common/leabar/LeabarItem";
 
 import MainSwiper from "components/content/mainSwiper/MainSwiper";
 import Foobar from "components/common/foobar/Foobar";
 // 请求组件
-import { findOneArticle, replyShow, replyUp } from "network/articleContent";
-import { addIp } from "common/addIp";
+import { leaveShow, leaveUp } from "network/articleList";
+
+import { articleSearch } from "network/articleSearch";
+
 // cookie操作函数
 import { setCookie, getCookie } from "common/cookie";
 
 export default {
-  name: "ArticleContent",
-  components: {
-    MainSwiper,
-    Foobar,
-    ConbarItem,
-    Leabar,
-    RepbarItem,
-    Conbar
-  },
+  name: "ArticleSearch",
+  components: { MainSwiper, Conbar, ConbarItem, Leabar, LeabarItem, Foobar },
   data() {
     return {
       switchData: false,
-      articleContent: "",
-      articleItem: {},
-      replyList: [],
-      replyObj: {
-        replyContent: "",
-        replyName: ""
-      }
+      articleList: [],
+      leaveObj: {
+        leaveContent: "",
+        leaveName: ""
+      },
+      leaveList: []
     };
   },
-  activated() {
-    this.replyShow();
-    this.getArticle();
-    window.scrollTo(0, 0);
-  },
-  deactivated() {
-    this.articleContent = null;
-    this.articleItem = {};
-    this.replyList = [];
-  },
   computed: {},
+  created() {
+    //获取留言数据
+    this.leaveShow();
+  },
+  activated() {
+    this.articleSearch((this.articleList = []));
+    // console.log(this.$router["searchObj"]);
+  },
+  deactivated() {},
   methods: {
-    //获取文章数据
-    getArticle() {
-      findOneArticle(this.$route.params.aid).then(res => {
-        this.articleContent = res.content;
-        this.articleItem.labelArray = res.labelArray;
-        this.articleItem.publishedTime = res.publishedTime;
-        this.articleItem.readCount = res.readCount;
-        this.articleItem.title = res.title;
-        this.articleItem.id = res.id;
-        this.articleItem.rank = res.rank;
-        addIp("articleContent");
+    // 搜索文章
+    articleSearch() {
+      articleSearch(
+        this.$router["searchObj"].searchLab,
+        this.$router["searchObj"].searchVal
+      ).then(res => {
+        this.articleList = res;
+        this.$message({
+          message: "为你找到" + this.articleList.length + "条文章",
+          type: "success"
+        });
       });
     },
     // 手机端留言板滑动类加载函数
     switchClick() {
       this.switchData = !this.switchData;
     },
-    //回复数据获取
-    replyShow() {
-      replyShow(this.$route.params.aid).then(res => {
-        this.replyList = res;
+    //当页码改变时触发的函数
+    handleCurrentChange(val) {
+      this.pageMessage.currentPage = val;
+      this.getArticleList();
+      // console.log(this.articleList);
+    },
+    //留言数据获取
+    leaveShow() {
+      leaveShow().then(res => {
+        this.leaveList = res;
       });
     },
-    //回复
-    replyed() {
-      this.replyObj.replyName = getCookie("leaveName");
-      if (this.replyObj.replyContent == "") {
+    //留言
+    leaved() {
+      this.leaveObj.leaveName = getCookie("leaveName");
+      if (this.leaveObj.leaveContent == "") {
         this.$message({
           message: "你还没输入内容呢",
           type: "warning"
         });
-      } else if (this.replyObj.replyName == "") {
+      } else if (this.leaveObj.leaveName == "") {
         this.open();
       } else {
-        replyUp(
-          this.replyObj.replyName,
-          this.replyObj.replyContent,
-          this.$route.params.aid
-        ).then(res => {
-          if (res.flag) {
-            this.$message({
-              message: res.errorMsg,
-              type: "success"
-            });
-          } else {
-            this.$message({
-              message: res.errorMsg,
-              type: "warning"
-            });
+        leaveUp(this.leaveObj.leaveName, this.leaveObj.leaveContent).then(
+          res => {
+            if (res.flag) {
+              this.$message({
+                message: res.errorMsg,
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.errorMsg,
+                type: "warning"
+              });
+            }
+            this.leaveObj.leaveContent = "";
+            this.leaveShow();
           }
-          this.replyObj.replyContent = "";
-          this.replyShow();
-        });
+        );
       }
     },
     //响亮的名字
@@ -168,7 +170,7 @@ export default {
       })
         .then(({ value }) => {
           setCookie("leaveName", value, 10);
-          this.replyed();
+          this.leaved();
         })
         .catch(() => {
           this.$message({
@@ -180,44 +182,14 @@ export default {
   }
 };
 </script>
-
 <style>
-/* pre {
-  display: block;
-  padding: 9.5px;
-  margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 1.42857143;
-  color: #333;
-  word-break: break-all;
-  word-wrap: break-word;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  overflow: auto;
-} */
 .el-message-box {
   max-width: 80%;
-}
-.articleContent img {
-  max-width: 100%;
 }
 </style>
 <style scoped>
 .leabar-input {
   padding: 10px;
-}
-.ifNull {
-  text-align: center;
-  color: rgba(0, 0, 0, 0.5);
-}
-.articleContent {
-  padding: 10px;
-  padding-bottom: 40px;
-  font-size: 15px;
-  line-height: 1.5;
-  /* font-family: '微软雅黑'; */
 }
 .leabar-content {
   height: 550px;
