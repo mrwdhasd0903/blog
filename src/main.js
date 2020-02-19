@@ -3,7 +3,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue'
 import router from './router'
-import store from './store'
+// import store from './store'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/an-old-hope.css' //样式文件
 
@@ -22,6 +22,6 @@ Vue.directive('highlight', function (el) {
 })
 new Vue({
   render: h => h(App),
-  store,
+  // store,
   router
 }).$mount('#app')
