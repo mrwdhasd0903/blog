@@ -25,7 +25,7 @@ export function replyUp(replyName, replyContent, aId) {
   return request({
     url: 'article/replyInfo',
     params: {
-      replyName: replyName,
+      replyName: replyName.substring(0,12),
       replyContent: replyContent,
       aId: aId
     }

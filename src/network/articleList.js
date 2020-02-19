@@ -25,7 +25,7 @@ export function leaveUp(leaveName, leaveContent) {
   return request({
     url: 'article/leaveInfo',
     params: {
-      leaveName: leaveName,
+      leaveName: leaveName.substring(0,12),
       leaveContent: leaveContent
     }
   })
