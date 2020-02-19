@@ -9,7 +9,12 @@
 
     <div class="info">
       <!-- 左边 -->
-      <div class="left">
+      <div
+        class="left"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        v-loading="loadingLeft"
+      >
         <conbar>
           <div slot="conbar">
             <conbar-item v-if="articleItem.id" :articleItem="articleItem"></conbar-item>
@@ -88,7 +93,8 @@ export default {
       replyObj: {
         replyContent: "",
         replyName: ""
-      }
+      },
+      loadingLeft: true
     };
   },
   activated() {
@@ -100,12 +106,14 @@ export default {
     this.articleContent = null;
     this.articleItem = {};
     this.replyList = [];
+    this.loadingLeft = true;
   },
   computed: {},
   methods: {
     //获取文章数据
     getArticle() {
       findOneArticle(this.$route.params.aid).then(res => {
+        this.loadingLeft = false;
         this.articleContent = res.content;
         this.articleItem.labelArray = res.labelArray;
         this.articleItem.publishedTime = res.publishedTime;
@@ -182,8 +190,13 @@ export default {
 </script>
 
 <style>
+blockquote {
+  padding: 5px;
+  background: #f9f9f9;
+  border-left: 10px solid #e3e3e3;
+}
 pre {
-  font-family:'微软雅黑';
+  font-family: "微软雅黑";
 }
 .el-message-box {
   max-width: 80%;
