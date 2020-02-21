@@ -73,8 +73,7 @@ import LabItem from "components/common/labbar/LabItem";
 import { getTheme, getAllLabel } from "network/navbar";
 //工具js
 import { addIp } from "common/addIp";
-import { isObjectValueEqual } from "common/utils";
-import { getColor } from "common/getColor";
+import { isObjectValueEqual,getColor } from "common/utils";
 
 export default {
   name: "MainNavbar",

@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+// import Vue from 'vue'
+// import VueRouter from 'vue-router'
 
 const ArticleList = () => import("views/articleList/ArticleList")
 const ArticleContent = () => import("views/articleContent/ArticleContent")
@@ -7,7 +7,7 @@ const ArticleSearch = () => import("views/articleSearch/ArticleSearch")
 
 
 // 1 安装插件
-Vue.use(VueRouter)
+// Vue.use(VueRouter)
 
 // 2配置路径和组件的映射信息
 const routes = [{

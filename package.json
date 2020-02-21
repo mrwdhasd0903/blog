@@ -1,19 +1,13 @@
 {
   "name": "blog",
-  "version": "0.1.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "better-scroll": "^1.15.2",
-    "core-js": "^3.6.4",
-    "element-ui": "^2.13.0",
-    "highlight.js": "^9.18.1",
-    "vue": "^2.6.11",
-    "vue-router": "^3.1.5"
+    "core-js": "^3.6.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",

@@ -73,6 +73,7 @@ import { findOneArticle, replyShow, replyUp } from "network/articleContent";
 import { addIp } from "common/addIp";
 // cookie操作函数
 import { setCookie, getCookie } from "common/cookie";
+import { imgAmp } from "common/utils";
 
 export default {
   name: "ArticleContent",
@@ -122,6 +123,7 @@ export default {
         this.articleItem.id = res.id;
         this.articleItem.rank = res.rank;
         addIp("articleContent");
+        imgAmp("articleContent");
       });
     },
     // 手机端留言板滑动类加载函数
@@ -190,19 +192,32 @@ export default {
 </script>
 
 <style>
+/* 图片点击放大的样式 */
+#imgamp img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 100%;
+  transform: translate(-50%, -50%);
+  box-shadow: -6px 3px 34px 0px rgba(0, 0, 0, 0.4);
+}
 blockquote {
   padding: 5px;
   background: #f9f9f9;
   border-left: 10px solid #e3e3e3;
 }
 pre {
-  font-family: "微软雅黑";
+  border-radius: 3px;
+  font-family: "DSM";
 }
 .el-message-box {
   max-width: 80%;
 }
 .articleContent img {
   max-width: 100%;
+}
+.hljs {
+  background: #222;
 }
 </style>
 <style scoped>

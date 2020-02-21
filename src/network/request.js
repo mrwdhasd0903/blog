@@ -1,4 +1,4 @@
-import axios from 'axios'
+// import axios from 'axios'
 //解决跨域sessionId问题
 axios.defaults.withCredentials = true
 export function request(config) {
