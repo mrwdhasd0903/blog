@@ -15,6 +15,11 @@ Vue.use(hljs)
 Vue.directive('highlight', function (el) {
   let blocks = el.querySelectorAll('pre');
   blocks.forEach((block) => {
+    let CLASS = block.className.replace("brush:", "")
+    CLASS = CLASS.replace(";toolbar:false", "")
+    CLASS = CLASS.replace(";toolbar:true", "")
+    CLASS = CLASS.replace("js", "javascript")
+    block.className = CLASS
     hljs.highlightBlock(block)
   })
 })
