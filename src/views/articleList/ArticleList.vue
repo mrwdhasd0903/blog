@@ -42,7 +42,13 @@
         <!-- 留言 -->
         <div class="leabar" ref="leabar" :class="{leabartransition:switchData}">
           <div class="leabar-input">
-            <el-input size="mini" maxlength="100" show-word-limit placeholder="欢迎留言" v-model="leaveObj.leaveContent">
+            <el-input
+              size="mini"
+              maxlength="100"
+              show-word-limit
+              placeholder="欢迎留言"
+              v-model="leaveObj.leaveContent"
+            >
               <el-button @click="leaved" slot="append">留言</el-button>
             </el-input>
           </div>
@@ -137,6 +143,7 @@ export default {
           // this.pageMessage.pageSize = res.pageSize;
           this.pageMessage.totalCount = res.totalCount;
           this.pageMessage.totalPage = res.totalPage;
+          window.scrollTo(0, 0);
         }
       );
     },

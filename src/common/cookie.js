@@ -1,3 +1,6 @@
+//cname:cookie的key值
+//cvalue:cookie的value值
+//exdays:保存的天数
 export function setCookie(cname, cvalue, exdays) {
   var d = new Date();
   // d.setTime(d.getTime() + (exdays * 1000));
@@ -5,7 +8,8 @@ export function setCookie(cname, cvalue, exdays) {
   var expires = "expires=" + d.toUTCString();
   document.cookie = cname + "=" + escape(cvalue) + ";" + expires + ";path=/";
 }
-
+//存在返回value值
+//不存在返回空字符串
 export function getCookie(cname) {
   var name = cname + "=";
   var ca = document.cookie.split(';');
