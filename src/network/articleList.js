@@ -13,10 +13,15 @@ export function pageQuery(currentPage, pageSize) {
     }
   })
 }
-//留言查询
-export function leaveShow() {
+
+//留言push查询
+export function leavePush(currentLeave, leaveSize) {
   return request({
-    url: 'article/leaveShow'
+    url: 'article/leavePush',
+    params: {
+      currentLeave: currentLeave,
+      leaveSize: leaveSize
+    }
   })
 }
 
@@ -25,7 +30,7 @@ export function leaveUp(leaveName, leaveContent) {
   return request({
     url: 'article/leaveInfo',
     params: {
-      leaveName: leaveName.substring(0,12),
+      leaveName: leaveName.substring(0, 12),
       leaveContent: leaveContent
     }
   })

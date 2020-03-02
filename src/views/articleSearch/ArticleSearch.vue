@@ -40,7 +40,13 @@
             </el-input>
           </div>
           <leabar>
-            <div class="leabar-content" slot="leabar">
+            <div
+              v-loading="loadingLeabar"
+              element-loading-background="rgba(255,255,255,.5)"
+              ref="leabarcontent"
+              class="leabar-content"
+              slot="leabar"
+            >
               <leabar-item v-for="(item,index) in leaveList" :key="index" :leaveItem="item"></leabar-item>
             </div>
           </leabar>
@@ -69,13 +75,13 @@ import LeabarItem from "components/common/leabar/LeabarItem";
 import MainSwiper from "components/content/mainSwiper/MainSwiper";
 import Foobar from "components/common/foobar/Foobar";
 // 请求组件
-import { leaveShow, leaveUp } from "network/articleList";
+import { leavePush, leaveUp } from "network/articleList";
 
 import { articleSearch } from "network/articleSearch";
 
 // cookie操作函数
 import { setCookie, getCookie } from "common/cookie";
-
+let _this;
 export default {
   name: "ArticleSearch",
   components: { MainSwiper, Conbar, ConbarItem, Leabar, LeabarItem, Foobar },
@@ -87,19 +93,30 @@ export default {
         leaveContent: "",
         leaveName: ""
       },
-      leaveList: []
+      leaveList: [],
+      loadingLeabar: true
     };
   },
   computed: {},
   created() {
     //获取留言数据
-    this.leaveShow();
+    this.leavePush();
   },
   activated() {
     this.articleSearch((this.articleList = []));
     // console.log(this.$router["searchObj"]);
   },
   deactivated() {},
+  beforeCreate() {
+    _this = this;
+  },
+  mounted() {
+    this.$refs.leabarcontent.addEventListener("scroll", function() {
+      if (this.scrollTop == this.scrollHeight - this.clientHeight) {
+        _this.leavePush();
+      }
+    });
+  },
   methods: {
     // 搜索文章
     articleSearch() {
@@ -124,14 +141,21 @@ export default {
       this.getArticleList();
       // console.log(this.articleList);
     },
-    //留言数据获取
-    leaveShow() {
-      leaveShow().then(res => {
-        this.leaveList = res;
-      });
+    leavePush() {
+      let currentLeave = this.leaveList.length / 20 + 1;
+      if (currentLeave % 1 === 0) {
+        this.loadingLeabar = true;
+        leavePush(this.leaveList.length / 20 + 1, 20).then(res => {
+          this.loadingLeabar = false;
+          if (res) {
+            this.leaveList.push(...res);
+          }
+        });
+      }
     },
     //留言
     leaved() {
+      this.$refs.leabarcontent.scrollTo(0, 0);
       this.leaveObj.leaveName = getCookie("leaveName");
       if (this.leaveObj.leaveContent == "") {
         this.$message({
@@ -148,14 +172,15 @@ export default {
                 message: res.errorMsg,
                 type: "success"
               });
+              this.leaveObj.leaveContent = "";
+              this.leaveList = [];
+              this.leavePush();
             } else {
               this.$message({
                 message: res.errorMsg,
                 type: "warning"
               });
             }
-            this.leaveObj.leaveContent = "";
-            this.leaveShow();
           }
         );
       }
