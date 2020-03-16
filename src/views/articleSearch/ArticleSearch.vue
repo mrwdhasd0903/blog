@@ -41,13 +41,13 @@
           </div>
           <leabar>
             <div
-              v-loading="loadingLeabar"
               element-loading-background="rgba(255,255,255,.5)"
               ref="leabarcontent"
               class="leabar-content"
               slot="leabar"
             >
               <leabar-item v-for="(item,index) in leaveList" :key="index" :leaveItem="item"></leabar-item>
+              <div v-if="loadingLeabar" v-loading="true" ref="loading" class="loading"></div>
             </div>
           </leabar>
         </div>
@@ -112,7 +112,11 @@ export default {
   },
   mounted() {
     this.$refs.leabarcontent.addEventListener("scroll", function() {
-      if (this.scrollTop == this.scrollHeight - this.clientHeight) {
+      if (
+        !_this.loadingLeabar &&
+        this.scrollTop == this.scrollHeight - this.clientHeight
+      ) {
+        _this.loadingLeabar = true;
         _this.leavePush();
       }
     });
@@ -141,16 +145,18 @@ export default {
       this.getArticleList();
       // console.log(this.articleList);
     },
+    //留言数据获取
     leavePush() {
       let currentLeave = this.leaveList.length / 20 + 1;
       if (currentLeave % 1 === 0) {
-        this.loadingLeabar = true;
         leavePush(this.leaveList.length / 20 + 1, 20).then(res => {
           this.loadingLeabar = false;
           if (res) {
             this.leaveList.push(...res);
           }
         });
+      } else {
+        this.loadingLeabar = false;
       }
     },
     //留言
@@ -219,6 +225,7 @@ export default {
 .leabar-content {
   height: 550px;
   overflow: auto;
+  overflow-x: hidden;
 }
 .pageQuery {
   margin-top: 20px;
