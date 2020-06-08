@@ -11,23 +11,20 @@ const ArticleSearch = () => import("views/articleSearch/ArticleSearch")
 
 // 2配置路径和组件的映射信息
 const routes = [{
-    path: '/',
-    redirect: '/articleList'
-  }, {
-    path: '/articleList',
-    component: ArticleList,
-  }, {
+  path: '/',
+  redirect: '/articleList'
+}, {
+  path: '/articleList',
+  component: ArticleList,
+}, {
 
-    path: '/articleList/:aid',
-    component: ArticleContent,
-  }, {
+  path: '/articleList/:aid',
+  component: ArticleContent,
+}, {
 
-    path: '/articleSearch',
-    component: ArticleSearch,
-  }
-
-
-]
+  path: '/articleSearch',
+  component: ArticleSearch,
+}]
 // 2 创建router
 const router = new VueRouter({
   routes,
